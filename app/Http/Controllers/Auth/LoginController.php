@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
+use Session;
+
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -36,5 +41,25 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request)
+    {
+        
+        $this->validateLogin($request);
+
+        $response = Http::post(env('API_URL').'/login', [
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
+        // dd(json_decode($response->getBody()->getContents()));
+        if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect('/login');
+        }
+        $clinic = json_decode($response->getBody()->getContents())->user->clinic[0];
+        Session::put([ 'clinicId' => $clinic->id, 'clinicName' => $clinic->name ]);
+        return redirect('/home');
+
+
     }
 }

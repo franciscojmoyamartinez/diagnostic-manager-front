@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -21,8 +22,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        return view('home');
+    public function index(Request $request)
+    {   
+        $bearerToken =  Auth::user()->api_token;
+        $clinicId = $request->session()->get('clinicId');
+        $response = Http::withToken($bearerToken)->get(env('API_URL').'/patients/clinic/'.$clinicId);
+        $patientsData = json_decode($response->getBody()->getContents());
+        return view('home', ['patients' => $patientsData]);
     }
 }

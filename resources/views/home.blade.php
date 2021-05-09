@@ -3,18 +3,34 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
+                <div class="card-header">{{ __('Company: '.session("clinicName")) }}</div>
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
 
-                    {{ __('You are logged in!') }}
+                @if(!empty($patients))
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td>Id</id>
+                                <td>FullName</id>
+                                <td>GovernmentId</id>
+                                <td>Actions</id>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($patients as $patient)
+                            <tr>
+                                <td>{{$patient->id}}</td> 
+                                <td>{{$patient->fullname}}</td> 
+                                <td>{{$patient->governmentId}}</td> 
+                                <td></td> 
+                            </tr>
+                        @endforeach
+                        </tbody>
+                        
+                    </table>
+                @endif
                 </div>
             </div>
         </div>
