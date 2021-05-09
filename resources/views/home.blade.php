@@ -24,7 +24,11 @@
                                 <td>{{$patient->id}}</td> 
                                 <td>{{$patient->fullname}}</td> 
                                 <td>{{$patient->governmentId}}</td> 
-                                <td></td> 
+                                <td>
+                                    <button type="button" class="btn btn-primary">Edit</button>
+                                    <button type="button" class="btn btn-danger">Remove</button>
+                                    <button type="button" class="btn btn-success">View Diagnostic</button>
+                                </td> 
                             </tr>
                         @endforeach
                         </tbody>
