@@ -4,7 +4,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Company: '.session("clinicName")) }}</div>
+                <div class="card-header">
+                    <a href="{{ route('home')}}" class="btn btn-primary btn-sm m-2">Return to list patients</a>
+                </div>
                 @if(!empty(session()->get('statusCode')))
                     @if(session()->get('statusCode') === 204 || session()->get('statusCode') === 201 || session()->get('statusCode') === 200)
                         @php ($textClass = 'success')
@@ -19,38 +21,41 @@
                 </div>
                 @endif
                 <div class="card-body">
-                @if(!empty($patients))
+                
+                <form action="{{ route('diagnostic.store', [request()->patientId])}}" method="POST">
+                    @csrf
+
                     <table class="table table-striped">
-                        <a href="{{ route('patient.formView')}}" class="btn btn-primary btn-sm m-2 float-right">Add new Patient</a>
                         <thead>
                             <tr>
                                 <td>Id</id>
-                                <td>FullName</id>
-                                <td>GovernmentId</id>
+                                <td>Diagnostic</id>
+                                <td>Comments</id>
                                 <td>Actions</id>
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($patients as $patient)
                             <tr>
-                                <td>{{$patient->id}}</td> 
-                                <td>{{$patient->fullname}}</td> 
-                                <td>{{$patient->governmentId}}</td> 
-                                <td class="d-flex">
-                                    <a class="btn btn-primary m-1" href="{{ route('patient.editView', [$patient->id])}}">Edit</a>
-                                    <form action="{{ route('patients.delete', [$patient->id]) }}" method="POST">
-                                        @csrf
-                                        {{ method_field('DELETE')}}
-                                        <input type="submit" class="btn btn-danger m-1" value="Remove">
-                                    </form>
-                                    <a class="btn btn-success m-1" href="{{ route('patient.diagnostic', [$patient->id])}}">View Diagnostics</a>
-                                </td> 
+                                <td></td>
+                                <td><input type="text" class="form-control" id="diagnostic" name="diagnostic" placeholder="" value=""></td>
+                                <td><input type="text" class="form-control" id="comments" name="comments" placeholder="" value=""></td>
+                                <td><button type="submit" class="btn btn-primary">Save</td>
                             </tr>
-                        @endforeach
+                        @if(!empty($diagnostics))
+                            @foreach($diagnostics as $diagnostic)
+                                <tr>
+                                    <td>{{$diagnostic->id}}</td> 
+                                    <td>{{$diagnostic->diagnostic}}</td> 
+                                    <td>{{$diagnostic->description}}</td> 
+                                    <td class="d-flex">
+                                    </td> 
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                         
                     </table>
-                @endif
+                </form>
                 </div>
             </div>
         </div>

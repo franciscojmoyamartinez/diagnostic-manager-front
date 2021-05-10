@@ -31,6 +31,33 @@ class HomeController extends Controller
         return view('home', ['patients' => $patientsData]);
     }
 
+    public function formView()
+    {
+        $bearerToken =  Auth::user()->api_token;
+        $response = Http::withToken($bearerToken)->get(env('API_URL').'/clinics');
+        $clinicsData = json_decode($response->getBody()->getContents());
+        return view('edit', ['clinics' => $clinicsData]);
+    }
+    
+    public function store(Request $request)
+    {
+        $bearerToken =  Auth::user()->api_token;
+        $response = Http::withToken($bearerToken)->post(env('API_URL').'/patients', [
+            'fullname' => $request->fullname,
+            'governmentId' => $request->governmentId,
+            'clinicId' => $request->clinicId
+            ]);
+        switch($response->getStatusCode()){
+            case 201:
+                $message = 'Patients created!!!';
+            break;
+            case 404:
+                $message = 'Error create!!!';
+            break;
+        }
+        return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
+    }
+
     public function editView($patientId)
     {
         $bearerToken =  Auth::user()->api_token;
@@ -45,7 +72,7 @@ class HomeController extends Controller
         $response = Http::withToken($bearerToken)->put(env('API_URL').'/patients/'.$patientId, [
             'fullname' => $request->fullname,
             'governmentId' => $request->governmentId,
-            ]);
+        ]);
         switch($response->getStatusCode()){
             case 200:
                 $message = 'Patients updated!!!';

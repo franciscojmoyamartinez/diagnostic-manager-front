@@ -1,26 +1,52 @@
 @extends('layouts.app')
+@php
+    $fullname = '';
+    $governmentId = '';
+@endphp
+@if(!empty($patient))
+    @php
+        $fullname = $patient->fullname;
+        $governmentId = $patient->governmentId;
+    @endphp
+@endif
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Edit patient for clinic: '.session("clinicName")) }}</div>
-                
+                <div class="card-header">
+                    @if(!empty($patient))
+                        Edit patient for clinic:
+                    @else
+                        New patient for clinic: 
+                    @endif
+                    {{session("clinicName")}}
+                </div>
                 
                 <div class="card-body">
-                @if(!empty($patient))
-                    <form action="{{ route('patient.edit', [$patient->id]) }}" method="POST">
+                    <form action="{{ !empty($patient) ? route('patient.edit', [$patient->id]) : route('patient.store')}}" method="POST">
                     @csrf
                     <div class="form-group row">
 
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="patientFullname" class="form-label">FullName</label>
-                            <input type="text" class="form-control" id="patientFullname" name="fullname" placeholder="name@example.com" value="{{$patient->fullname}}">
+                            <input type="text" class="form-control" id="patientFullname" name="fullname" placeholder="name@example.com" value="{{$fullname}}">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="patientGovernmentId" class="form-label">GovernmentId</label>
-                            <input type="text" class="form-control" id="patientGovernmentId" name="governmentId" placeholder="12345678F" value="{{$patient->governmentId}}">
+                            <input type="text" class="form-control" id="patientGovernmentId" name="governmentId" placeholder="12345678F" value="{{$governmentId}}">
                         </div>
+                        @if(empty($patient))
+                            <div class="col-md-3">
+                                <label for="patientClinicId" class="form-label">Clinic</label>
+                                <select id="patientClinicId" class="form-control form-select-sm" name="clinicId" aria-label="Default select example">
+                                    <option selected>Choose Clinic</option>
+                                    @foreach($clinics as $clinic)
+                                        <option value="{{$clinic->id}}">{{$clinic->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                     </div>
                     <div class="form-group row mb-0">
                         <div class="col-md-8">
@@ -30,7 +56,6 @@
                         </div>
                     </div>
                     </form>
-                @endif
                 </div>
             </div>
         </div>
