@@ -20,3 +20,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::delete('/patients/{id}', [App\Http\Controllers\HomeController::class, 'delete'])->name('patients.delete');

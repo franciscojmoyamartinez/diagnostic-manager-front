@@ -1,13 +1,24 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ __('Company: '.session("clinicName")) }}</div>
+                @if(!empty(session()->get('statusCode')) && session()->get('statusCode')=== 204)
+                    @if(session()->get('statusCode') === 204)
+                        @php ($textClass = 'success')
+                    @else
+                        @php ($textClass = 'danger')
+                    @endif
+                <div class="alert alert-{{$textClass}}" role="alert">
+                    {{session()->get('status')}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
                 <div class="card-body">
-
                 @if(!empty($patients))
                     <table class="table table-striped">
                         <thead>
@@ -24,10 +35,14 @@
                                 <td>{{$patient->id}}</td> 
                                 <td>{{$patient->fullname}}</td> 
                                 <td>{{$patient->governmentId}}</td> 
-                                <td>
-                                    <button type="button" class="btn btn-primary">Edit</button>
-                                    <button type="button" class="btn btn-danger">Remove</button>
-                                    <button type="button" class="btn btn-success">View Diagnostic</button>
+                                <td class="d-flex">
+                                    <button type="button" class="btn btn-primary m-1">Edit</button>
+                                    <form action="{{ route('patients.delete', [$patient->id]) }}" method="POST">
+                                        @csrf
+                                        {{ method_field('DELETE')}}
+                                        <input type="submit" class="btn btn-danger m-1" value="Remove">
+                                    </form>
+                                    <button type="button" class="btn btn-success m-1">View Diagnostic</button>
                                 </td> 
                             </tr>
                         @endforeach

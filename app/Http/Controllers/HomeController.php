@@ -30,4 +30,22 @@ class HomeController extends Controller
         $patientsData = json_decode($response->getBody()->getContents());
         return view('home', ['patients' => $patientsData]);
     }
+    /**
+     * @param  int  $id
+     * @return 
+     */
+    public function delete($id)
+    {
+        $bearerToken =  Auth::user()->api_token;
+        $response = Http::withToken($bearerToken)->delete(env('API_URL').'/patients/'.$id);
+        switch($response->getStatusCode()){
+            case 204:
+                $message = 'Patients deleted!!!';
+            break;
+            case 404:
+                $message = 'Error deleted!!!';
+            break;
+        }
+        return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
+    }
 }
