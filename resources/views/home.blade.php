@@ -44,6 +44,7 @@
                                         <input type="submit" class="btn btn-danger m-1" value="Remove">
                                     </form>
                                     <a class="btn btn-success m-1" href="{{ route('patient.diagnostic', [$patient->id])}}">View Diagnostics</a>
+                                    <a class="btn btn-info m-1" href="{{ route('patient.historical', [$patient->id])}}">View Historical</a>
                                 </td> 
                             </tr>
                         @endforeach
