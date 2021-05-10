@@ -30,19 +30,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                        <tr>
+                            <td>
+                            Add Patient
+                            </td>
+                        </tr>
                         @foreach($patients as $patient)
                             <tr>
                                 <td>{{$patient->id}}</td> 
                                 <td>{{$patient->fullname}}</td> 
                                 <td>{{$patient->governmentId}}</td> 
                                 <td class="d-flex">
-                                    <button type="button" class="btn btn-primary m-1">Edit</button>
+                                    <a class="btn btn-primary m-1" href="{{ route('patient.editView', [$patient->id])}}">Edit</a>
                                     <form action="{{ route('patients.delete', [$patient->id]) }}" method="POST">
                                         @csrf
                                         {{ method_field('DELETE')}}
                                         <input type="submit" class="btn btn-danger m-1" value="Remove">
                                     </form>
-                                    <button type="button" class="btn btn-success m-1">View Diagnostic</button>
+                                    <button type="button" class="btn btn-success m-1">View Diagnostics</button>
                                 </td> 
                             </tr>
                         @endforeach

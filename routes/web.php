@@ -20,4 +20,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/home/{patientId}', [App\Http\Controllers\HomeController::class, 'edit'])->name('patient.edit');
+Route::get('/home/{patientId}', [App\Http\Controllers\HomeController::class, 'editView'])->name('patient.editView');
 Route::delete('/patients/{id}', [App\Http\Controllers\HomeController::class, 'delete'])->name('patients.delete');

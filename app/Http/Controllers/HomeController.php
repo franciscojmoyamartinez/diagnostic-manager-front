@@ -30,6 +30,32 @@ class HomeController extends Controller
         $patientsData = json_decode($response->getBody()->getContents());
         return view('home', ['patients' => $patientsData]);
     }
+
+    public function editView($patientId)
+    {
+        $bearerToken =  Auth::user()->api_token;
+        $response = Http::withToken($bearerToken)->get(env('API_URL').'/patients/'.$patientId);
+        $patientData = json_decode($response->getBody()->getContents());
+        return view('edit', ['patient' => $patientData]);
+    }
+
+    public function edit(Request $request, $patientId)
+    {   
+        $bearerToken =  Auth::user()->api_token;
+        $response = Http::withToken($bearerToken)->put(env('API_URL').'/patients/'.$patientId, [
+            'fullname' => $request->fullname,
+            'governmentId' => $request->governmentId,
+            ]);
+        switch($response->getStatusCode()){
+            case 200:
+                $message = 'Patients updated!!!';
+            break;
+            case 404:
+                $message = 'Error update!!!';
+            break;
+        }
+        return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
+    }
     /**
      * @param  int  $id
      * @return 
