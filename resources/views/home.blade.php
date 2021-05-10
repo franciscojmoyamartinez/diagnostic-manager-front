@@ -19,7 +19,6 @@
                 </div>
                 @endif
                 <div class="card-body">
-                @if(!empty($patients))
                     <table class="table table-striped">
                         <a href="{{ route('patient.formView')}}" class="btn btn-primary btn-sm m-2 float-right">Add new Patient</a>
                         <thead>
@@ -30,6 +29,7 @@
                                 <td>Actions</id>
                             </tr>
                         </thead>
+                @if(!empty($patients))
                         <tbody>
                         @foreach($patients as $patient)
                             <tr>
@@ -49,9 +49,9 @@
                             </tr>
                         @endforeach
                         </tbody>
+                @endif
                         
                     </table>
-                @endif
                 </div>
             </div>
         </div>
