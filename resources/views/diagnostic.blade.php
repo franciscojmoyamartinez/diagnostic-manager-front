@@ -37,8 +37,22 @@
                         <tbody>
                             <tr>
                                 <td></td>
-                                <td><input type="text" class="form-control" id="diagnostic" name="diagnostic" placeholder="" value=""></td>
-                                <td><input type="text" class="form-control" id="comments" name="comments" placeholder="" value=""></td>
+                                <td>
+                                    <input type="text" class="form-control" id="diagnostic" name="diagnostic" placeholder="" value="">
+                                    @if ($errors->has('diagnostic'))
+                                        <span class="text-danger">
+                                            <strong>{{$errors->first('diagnostic')}}</strong>
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="comments" name="comments" placeholder="" value="">
+                                    @if ($errors->has('comments'))
+                                        <span class="text-danger">
+                                            <strong>{{$errors->first('comments')}}</strong>
+                                        </span>
+                                    @endif
+                                </td>
                                 <td><button type="submit" class="btn btn-primary">Save</td>
                             </tr>
                         @if(!empty($diagnostics))

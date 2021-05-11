@@ -40,7 +40,14 @@ class HomeController extends Controller
     }
     
     public function store(Request $request)
-    {
+    {   
+        // Validate
+        $validated = $request->validate([
+            'fullname' => 'required|min:1|max:255',
+            'governmentId' => 'required|min:9',
+            'clinicId' => 'required|integer'
+        ]);
+
         $bearerToken =  Auth::user()->api_token;
         $response = Http::withToken($bearerToken)->post(env('API_URL').'/patients', [
             'fullname' => $request->fullname,
@@ -65,9 +72,19 @@ class HomeController extends Controller
         $patientData = json_decode($response->getBody()->getContents());
         return view('edit', ['patient' => $patientData]);
     }
-
+    /**
+     * Edit patients information
+     *  * @param  Request  $request
+     *  * @param  int      $patientId
+     *    @return Redirect
+     */
     public function edit(Request $request, $patientId)
     {   
+        // Validate
+        $validated = $request->validate([
+            'fullname' => 'required|min:1|max:255',
+            'governmentId' => 'required|min:9'
+        ]);
         $bearerToken =  Auth::user()->api_token;
         $response = Http::withToken($bearerToken)->put(env('API_URL').'/patients/'.$patientId, [
             'fullname' => $request->fullname,

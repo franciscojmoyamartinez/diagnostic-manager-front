@@ -38,6 +38,11 @@ class DiagnosticController extends Controller
      */
     public function store(Request $request, $patientId)
     {   
+        // Validate
+        $validated = $request->validate([
+            'diagnostic' => 'required|min:1|max:255',
+            'comments' => 'required|min:1'
+        ]);
         $bearerToken =  Auth::user()->api_token;
        
         $response = Http::withToken($bearerToken)->post(env('API_URL').'/diagnostic', [

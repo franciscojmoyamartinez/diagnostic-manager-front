@@ -30,11 +30,21 @@
 
                         <div class="col-md-3">
                             <label for="patientFullname" class="form-label">FullName</label>
-                            <input type="text" class="form-control" id="patientFullname" name="fullname" placeholder="name@example.com" value="{{$fullname}}">
+                            <input type="text" class="form-control" id="patientFullname" name="fullname" placeholder="Pedro Rodriguez Rodriguez" value="{{$fullname}}">
+                            @if ($errors->has('fullname'))
+                                <span class="text-danger">
+                                    <strong>{{$errors->first('fullname')}}</strong>
+                                </span>
+                            @endif
                         </div>
                         <div class="col-md-3">
                             <label for="patientGovernmentId" class="form-label">GovernmentId</label>
                             <input type="text" class="form-control" id="patientGovernmentId" name="governmentId" placeholder="12345678F" value="{{$governmentId}}">
+                            @if ($errors->has('governmentId'))
+                                <span class="text-danger">
+                                    <strong>{{$errors->first('governmentId')}}</strong>
+                                </span>
+                            @endif
                         </div>
                         @if(empty($patient))
                             <div class="col-md-3">
@@ -45,6 +55,11 @@
                                         <option value="{{$clinic->id}}">{{$clinic->name}}</option>
                                     @endforeach
                                 </select>
+                                @if ($errors->has('clinicId'))
+                                <span class="text-danger">
+                                    <strong>{{$errors->first('clinicId')}}</strong>
+                                </span>
+                            @endif
                             </div>
                         @endif
                     </div>
