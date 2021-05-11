@@ -49,10 +49,11 @@
                         @if(empty($patient))
                             <div class="col-md-3">
                                 <label for="patientClinicId" class="form-label">Clinic</label>
-                                <select id="patientClinicId" class="form-control form-select-sm" name="clinicId" aria-label="Default select example">
-                                    <option selected>Choose Clinic</option>
+                                <select id="patientClinicId" class="form-control form-select-sm" name="clinicId" aria-label="Default select example" >
+                                    <option >Choose Clinic</option>
                                     @foreach($clinics as $clinic)
-                                        <option value="{{$clinic->id}}">{{$clinic->name}}</option>
+                                        
+                                        <option value="{{$clinic->id}}" {{ ( $clinic->id === session('clinicId')) ? 'selected' : '' }}>{{$clinic->name}}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('clinicId'))
