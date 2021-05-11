@@ -97,6 +97,9 @@ class HomeController extends Controller
             case 404:
                 $message = 'Error update!!!';
             break;
+            case 422:
+                $message = 'Error duplicate entry!!!';
+            break;
         }
         return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
     }
