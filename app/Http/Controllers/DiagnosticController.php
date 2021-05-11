@@ -9,7 +9,7 @@ class DiagnosticController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, $patientId)
@@ -18,16 +18,6 @@ class DiagnosticController extends Controller
         $response = Http::withToken($bearerToken)->get(env('API_URL').'/diagnostic/'.$patientId);
         $diagnosticData = json_decode($response->getBody()->getContents());
         return view('diagnostic', ['diagnostics' => $diagnosticData, 'patientId' => $patientId]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -61,48 +51,4 @@ class DiagnosticController extends Controller
         return redirect('/patient/diagnostic/'.$patientId)->with('status',$message)->with('statusCode',$response->getStatusCode());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -18,8 +18,8 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
+     * Show the application patients.
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(Request $request)
@@ -31,7 +31,11 @@ class HomeController extends Controller
         $patientsData = json_decode($response->getBody()->getContents());
         return view('home', ['patients' => $patientsData]);
     }
-
+    /**
+     * Show the form View add patients.
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function formView(Request $request)
     {
         $bearerToken =  $request->session()->get('api_token');
@@ -39,7 +43,11 @@ class HomeController extends Controller
         $clinicsData = json_decode($response->getBody()->getContents());
         return view('edit', ['clinics' => $clinicsData]);
     }
-    
+    /**
+     * Save patient data.
+     * @param  \Illuminate\Http\Request  $request
+     * @return Redirect
+     */
     public function store(Request $request)
     {   
         // Validate
@@ -68,7 +76,12 @@ class HomeController extends Controller
         }
         return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
     }
-
+    /**
+     * Load form data edit patient
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $patientId
+     * @return Redirect
+     */
     public function editView(Request $request, $patientId)
     {
         $bearerToken =  $request->session()->get('api_token');
@@ -112,6 +125,7 @@ class HomeController extends Controller
         return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
     }
     /**
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return 
      */
