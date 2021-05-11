@@ -52,12 +52,12 @@ class LoginController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ]);
-        // dd(json_decode($response->getBody()->getContents()));
         if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect('/login');
         }
-        $clinic = json_decode($response->getBody()->getContents())->user->clinic[0];
-        Session::put([ 'clinicId' => $clinic->id, 'clinicName' => $clinic->name ]);
+        $dataResponse = json_decode($response->getBody()->getContents());
+        $clinic = $dataResponse->user->clinic[0];
+        Session::put([ 'clinicId' => $clinic->id, 'clinicName' => $clinic->name, 'api_token' => $dataResponse->user->api_token ]);
         return redirect('/home');
 
 

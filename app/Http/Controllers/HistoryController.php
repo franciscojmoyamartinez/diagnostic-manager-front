@@ -13,9 +13,9 @@ class HistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($patientId)
+    public function index(Request $request, $patientId)
     {
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->get(env('API_URL').'/history/'.$patientId);
         $histories = json_decode($response->getBody()->getContents());
         return view('history', ['histories' => $histories, 'patientId' => $patientId]);

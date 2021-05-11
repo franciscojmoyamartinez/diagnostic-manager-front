@@ -12,9 +12,9 @@ class DiagnosticController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($patientId)
+    public function index(Request $request, $patientId)
     {
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->get(env('API_URL').'/diagnostic/'.$patientId);
         $diagnosticData = json_decode($response->getBody()->getContents());
         return view('diagnostic', ['diagnostics' => $diagnosticData, 'patientId' => $patientId]);
@@ -43,8 +43,7 @@ class DiagnosticController extends Controller
             'diagnostic' => 'required|min:1|max:255',
             'comments' => 'required|min:1'
         ]);
-        $bearerToken =  Auth::user()->api_token;
-       
+        $bearerToken =  $request->session()->get('api_token');       
         $response = Http::withToken($bearerToken)->post(env('API_URL').'/diagnostic', [
             'diagnostic' => $request->diagnostic,
             'description' => $request->comments,

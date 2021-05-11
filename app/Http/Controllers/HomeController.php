@@ -24,16 +24,17 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {   
-        $bearerToken =  Auth::user()->api_token;
+
+        $bearerToken =  $request->session()->get('api_token');
         $clinicId = $request->session()->get('clinicId');
         $response = Http::withToken($bearerToken)->get(env('API_URL').'/patients/clinic/'.$clinicId);
         $patientsData = json_decode($response->getBody()->getContents());
         return view('home', ['patients' => $patientsData]);
     }
 
-    public function formView()
+    public function formView(Request $request)
     {
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->get(env('API_URL').'/clinics');
         $clinicsData = json_decode($response->getBody()->getContents());
         return view('edit', ['clinics' => $clinicsData]);
@@ -48,7 +49,7 @@ class HomeController extends Controller
             'clinicId' => 'required|integer'
         ]);
 
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->post(env('API_URL').'/patients', [
             'fullname' => $request->fullname,
             'governmentId' => $request->governmentId,
@@ -61,14 +62,21 @@ class HomeController extends Controller
             case 404:
                 $message = 'Error create!!!';
             break;
+            case 422:
+                $message = 'Error duplicate entry!!!';
+            break;
         }
         return redirect('/home')->with('status',$message)->with('statusCode',$response->getStatusCode());
     }
 
-    public function editView($patientId)
+    public function editView(Request $request, $patientId)
     {
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->get(env('API_URL').'/patients/'.$patientId);
+        if($response->getStatusCode() === 401){
+            abort(403, 'Unauthorized action.');
+        }
+
         $patientData = json_decode($response->getBody()->getContents());
         return view('edit', ['patient' => $patientData]);
     }
@@ -85,7 +93,7 @@ class HomeController extends Controller
             'fullname' => 'required|min:1|max:255',
             'governmentId' => 'required|min:9'
         ]);
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->put(env('API_URL').'/patients/'.$patientId, [
             'fullname' => $request->fullname,
             'governmentId' => $request->governmentId,
@@ -107,9 +115,9 @@ class HomeController extends Controller
      * @param  int  $id
      * @return 
      */
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
-        $bearerToken =  Auth::user()->api_token;
+        $bearerToken =  $request->session()->get('api_token');
         $response = Http::withToken($bearerToken)->delete(env('API_URL').'/patients/'.$id);
         switch($response->getStatusCode()){
             case 204:
